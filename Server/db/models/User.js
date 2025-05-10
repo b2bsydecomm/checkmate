@@ -17,6 +17,17 @@ const UserSchema = mongoose.Schema(
 			required: true,
 			unique: true,
 		},
+		phone: {
+			type: String,
+			required: false,
+			unique: false,
+			validate: {
+				validator: function (v) {
+					return /^\+[1-9]\d{4,14}$/.test(v);
+				},
+				message: "Invalid phone number",
+			},
+		},
 		password: {
 			type: String,
 			required: true,

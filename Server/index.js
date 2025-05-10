@@ -52,6 +52,7 @@ import net from "net";
 import ngrok from "ngrok";
 // Email service and dependencies
 import EmailService from "./service/emailService.js";
+import SmsService from "./service/smsService.js";
 import nodemailer from "nodemailer";
 import pkg from "handlebars";
 const { compile } = pkg;
@@ -172,9 +173,10 @@ const startApp = async () => {
 		nodemailer,
 		logger
 	);
+	const smsService = new SmsService(settingsService, logger);
 	const networkService = new NetworkService(axios, ping, logger, http, Docker, net);
 	const statusService = new StatusService(db, logger);
-	const notificationService = new NotificationService(emailService, db, logger);
+	const notificationService = new NotificationService(emailService, smsService, db, logger);
 
 	const jobQueue = new JobQueue(
 		db,
@@ -192,6 +194,7 @@ const startApp = async () => {
 	ServiceRegistry.register(MongoDB.SERVICE_NAME, db);
 	ServiceRegistry.register(SettingsService.SERVICE_NAME, settingsService);
 	ServiceRegistry.register(EmailService.SERVICE_NAME, emailService);
+	ServiceRegistry.register(SmsService.SERVICE_NAME, smsService);
 	ServiceRegistry.register(NetworkService.SERVICE_NAME, networkService);
 	ServiceRegistry.register(StatusService.SERVICE_NAME, statusService);
 	ServiceRegistry.register(NotificationService.SERVICE_NAME, notificationService);

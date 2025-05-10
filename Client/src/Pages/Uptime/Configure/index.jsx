@@ -61,6 +61,7 @@ const Configure = () => {
 		"monitor-text-find": "textFind",
 		"monitor-checks-ping": "type",
 		"notify-email-default": "notification-email",
+		"notify-sms": "notification-sms",
 	};
 
 	useEffect(() => {
@@ -103,10 +104,7 @@ const Configure = () => {
 						...prev,
 						notifications: [
 							...notifs,
-							name === "email"
-								? { type: name, address: value }
-								: // TODO - phone number
-									{ type: name, phone: value },
+							{ type: name, address: value },
 						],
 					};
 				}
@@ -398,14 +396,18 @@ const Configure = () => {
 							<Stack gap={theme.spacing(6)}>
 								<Typography component="p">When there is a new incident,</Typography>
 								{/* {Leaving components commented for future funtionality implimentation} */}
-								{/* <Checkbox
+								<Checkbox
 									id="notify-sms"
-									label="Notify via SMS (coming soon)"
-									isChecked={false}
-									value=""
-									onChange={() => logger.warn("disabled")}
-									isDisabled={true}
-								/> */}
+									label={user?.phone ? `Notify via SMS (${user?.phone})` : "Please add a phone number in profile to enable SMS notifications"}
+									isChecked={
+										monitor?.notifications?.some(
+											(notification) => notification.type === "sms"
+										) || false
+									}
+									value={user?.phone}
+									onChange={(event) => handleChange(event)}
+									isDisabled={!user?.phone}
+								/>
 								<Checkbox
 									id="notify-email-default"
 									label={`Notify via email (to ${user.email})`}

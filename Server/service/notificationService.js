@@ -6,12 +6,14 @@ class NotificationService {
 	 * Creates an instance of NotificationService.
 	 *
 	 * @param {Object} emailService - The email service used for sending notifications.
+	 * @param {Object} smsService - The sms service used for sending notifications.
 	 * @param {Object} db - The database instance for storing notification data.
 	 * @param {Object} logger - The logger instance for logging activities.
 	 */
-	constructor(emailService, db, logger) {
+	constructor(emailService, smsService, db, logger) {
 		this.SERVICE_NAME = SERVICE_NAME;
 		this.emailService = emailService;
+		this.smsService = smsService;
 		this.db = db;
 		this.logger = logger;
 	}
@@ -55,6 +57,13 @@ class NotificationService {
 		return true;
 	}
 
+	async sendSms(networkResponse, address) {
+		const { monitor, status, prevStatus } = networkResponse;
+		const message = `Monitor ${monitor.name} is ${status === true ? "up" : "down"}`;
+		this.smsService.sendSms(message, address);
+		return true;
+	}
+
 	async handleStatusNotifications(networkResponse) {
 		try {
 			//If status hasn't changed, we're done
@@ -69,6 +78,17 @@ class NotificationService {
 			for (const notification of notifications) {
 				if (notification.type === "email") {
 					this.sendEmail(networkResponse, notification.address);
+				}
+				if (notification.type === "sms") {
+					if (!notification.address) {
+						this.logger.warn({
+							message: "No phone number provided for SMS notification",
+							service: this.SERVICE_NAME,
+							method: "handleStatusNotifications",
+						});
+					} else {
+						this.sendSms(networkResponse, notification.address);
+					}
 				}
 				// Handle other types of notifications here
 			}

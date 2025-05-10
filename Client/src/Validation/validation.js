@@ -69,6 +69,9 @@ const credentials = joi.object({
 			"string.empty": "Email is required",
 			"string.email": "Must be a valid email address",
 		}),
+	phone: joi.string().trim().allow("").pattern(/^\+[1-9]\d{4,14}$/).messages({
+		"string.pattern.base": "Must be a valid phone number",
+	}),
 	password: passwordSchema,
 	newPassword: passwordSchema,
 	confirm: joi

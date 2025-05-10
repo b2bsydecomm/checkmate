@@ -50,6 +50,7 @@ export const update = createAsyncThunk("auth/update", async (data, thunkApi) => 
 		const fd = new FormData();
 		form.firstName && fd.append("firstName", form.firstName);
 		form.lastName && fd.append("lastName", form.lastName);
+		fd.append("phone", form.phone || "");
 		form.password && fd.append("password", form.password);
 		form.newPassword && fd.append("newPassword", form.newPassword);
 		if (form.file && form.file !== "") {

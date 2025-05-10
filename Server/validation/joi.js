@@ -74,6 +74,9 @@ const editUserParamValidation = joi.object({
 const editUserBodyValidation = joi.object({
 	firstName: joi.string().pattern(/^[A-Za-z]+$/),
 	lastName: joi.string().pattern(/^[A-Za-z]+$/),
+	phone: joi.string().trim().allow("").pattern(/^\+[1-9]\d{4,14}$/).messages({
+		"string.pattern.base": "Must be a valid phone number",
+	}),
 	profileImage: joi.any(),
 	newPassword: joi.string().min(8).pattern(passwordPattern),
 	password: joi.string().min(8).pattern(passwordPattern),

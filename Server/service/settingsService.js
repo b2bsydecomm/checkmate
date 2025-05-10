@@ -19,6 +19,10 @@ const envConfig = {
 	systemEmailAddress: process.env.SYSTEM_EMAIL_ADDRESS,
 	systemEmailUser: process.env.SYSTEM_EMAIL_USER,
 	systemEmailPassword: process.env.SYSTEM_EMAIL_PASSWORD,
+	smsNotificationEnabled: process.env.SMS_NOTIFICATION_ENABLED === "true",
+	twilioAccountSid: process.env.TWILIO_ACCOUNT_SID,
+	twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
+	twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER,
 };
 /**
  * SettingsService

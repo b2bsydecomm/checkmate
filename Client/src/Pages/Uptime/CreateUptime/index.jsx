@@ -394,6 +394,18 @@ const CreateMonitor = () => {
 					</Box>
 					<Stack gap={theme.spacing(6)}>
 						<Checkbox
+							id="notify-sms"
+							label={user?.phone ? `Notify via SMS (${user?.phone})` : "Please add a phone number in profile to enable SMS notifications"}
+							isChecked={
+								monitor?.notifications?.some(
+									(notification) => notification.type === "sms"
+								) || false
+							}
+							value={user?.phone}
+							onChange={(event) => handleNotifications(event, "sms")}
+							isDisabled={!user?.phone}
+						/>
+						<Checkbox
 							id="notify-email-default"
 							label={`Notify via email (to ${user.email})`}
 							isChecked={monitor.notifications.some(

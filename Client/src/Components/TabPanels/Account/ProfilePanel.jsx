@@ -38,6 +38,7 @@ const ProfilePanel = () => {
 	const idToName = {
 		"edit-first-name": "firstName",
 		"edit-last-name": "lastName",
+		"edit-phone": "phone",
 		// Disabled for now, will revisit in the future
 		// "edit-email": "email",
 	};
@@ -46,6 +47,7 @@ const ProfilePanel = () => {
 	const [localData, setLocalData] = useState({
 		firstName: user.firstName,
 		lastName: user.lastName,
+		phone: user.phone,
 		// email: user.email, // Disabled for now
 	});
 	const [errors, setErrors] = useState({});
@@ -156,7 +158,8 @@ const ProfilePanel = () => {
 			localData.firstName === user.firstName &&
 			localData.lastName === user.lastName &&
 			localData.deleteProfileImage === undefined &&
-			localData.file === undefined
+			localData.file === undefined &&
+			localData.phone === user.phone
 		) {
 			createToast({
 				body: "Unable to update profile — no changes detected.",
@@ -284,6 +287,28 @@ const ProfilePanel = () => {
 						autoComplete="email"
 						onChange={() => logger.warn("disabled")}
 						disabled={true}
+						flex={1}
+					/>
+				</Stack>
+				<Stack
+					direction="row"
+					gap={SPACING_GAP}
+				>
+					<Stack flex={0.9}>
+						<Typography component="h1">Phone</Typography>
+						<Typography
+							component="p"
+							sx={{ opacity: 0.6 }}
+						>
+							This is your current phone number
+						</Typography>
+					</Stack>
+					<TextInput
+						id="edit-phone"
+						value={localData.phone}
+						placeholder="Enter your phone number: +61..."
+						autoComplete="phone"
+						onChange={handleChange}
 						flex={1}
 					/>
 				</Stack>

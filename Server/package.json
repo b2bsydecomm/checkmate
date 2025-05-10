@@ -37,6 +37,7 @@
 		"sharp": "0.33.5",
 		"ssl-checker": "2.0.10",
 		"swagger-ui-express": "5.0.1",
+		"twilio": "^5.6.0",
 		"winston": "^3.13.0"
 	},
 	"devDependencies": {
