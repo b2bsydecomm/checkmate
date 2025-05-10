@@ -5,7 +5,7 @@ const AppSettingsSchema = mongoose.Schema(
 		apiBaseUrl: {
 			type: String,
 			required: true,
-			default: "http://localhost:5000/api/v1",
+			default: "/api/v1",
 		},
 		logLevel: {
 			type: String,

@@ -1,0 +1,67 @@
+services:
+  client:
+    # image: bluewaveuptime/uptime_client:latest
+    image: uptime_client:latest
+    command: ["npm", "run", "dev", "--host"]
+    build:
+      context: .
+      dockerfile: Docker/dev/client.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - VITE_APP_API_BASE_URL=/api/v1
+    ports:
+      - "5173:5173"
+    volumes:
+      # - ./Client/dist:/usr/share/nginx/html
+      - ./Client/:/app/
+    depends_on:
+      - server
+  server:
+    # image: bluewaveuptime/uptime_server:latest
+    image: uptime_server:latest
+    command: ["npm", "run", "dev"]
+    build:
+      context: .
+      dockerfile: Docker/dev/server.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+      - mongodb
+    env_file:
+      - .env
+    environment:
+      - DB_CONNECTION_STRING=mongodb://mongodb:27017/uptime_db
+      - REDIS_HOST=redis
+    volumes:
+      - ./Server:/app
+      # - ./Server/service/:/app/service/
+    # - /var/run/docker.sock:/var/run/docker.sock:ro
+  redis:
+    image: bluewaveuptime/uptime_redis:latest
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+  mongodb:
+    image: bluewaveuptime/uptime_database_mongo:latest
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    command: ["mongod", "--quiet"]
+    ports:
+      - "27017:27017"
+
+volumes:
+  redis_data:
+  mongo_data:
+
