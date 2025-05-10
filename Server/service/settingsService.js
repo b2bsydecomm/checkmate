@@ -17,6 +17,7 @@ const envConfig = {
 	systemEmailHost: process.env.SYSTEM_EMAIL_HOST,
 	systemEmailPort: process.env.SYSTEM_EMAIL_PORT,
 	systemEmailAddress: process.env.SYSTEM_EMAIL_ADDRESS,
+	systemEmailUser: process.env.SYSTEM_EMAIL_USER,
 	systemEmailPassword: process.env.SYSTEM_EMAIL_PASSWORD,
 };
 /**

@@ -1,4 +1,4 @@
-default_server_base_url="http://localhost:5000/api/v1" 
+default_server_base_url="/api/v1" 
 default_client_host="http://localhost:5173"
 default_jwt_secret="my_secret"
 default_db_type="MongoDB"

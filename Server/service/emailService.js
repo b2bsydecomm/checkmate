@@ -74,17 +74,21 @@ class EmailService {
 		 * @type {Object}
 		 */
 
-		const { systemEmailHost, systemEmailPort, systemEmailAddress, systemEmailPassword } =
+		const { systemEmailHost, systemEmailPort, systemEmailUser, systemEmailAddress, systemEmailPassword } =
 			this.settingsService.getSettings();
 
 		const emailConfig = {
 			host: systemEmailHost,
 			port: systemEmailPort,
-			secure: true,
+			// secure: true,
 			auth: {
-				user: systemEmailAddress,
+				user: systemEmailUser || systemEmailAddress,
 				pass: systemEmailPassword,
 			},
+			secureConnection: false,
+			tls: {
+				ciphers:'SSLv3'
+			}
 		};
 
 		this.transporter = this.nodemailer.createTransport(emailConfig);
@@ -117,7 +121,9 @@ class EmailService {
 
 		const sendEmail = async (to, subject, html) => {
 			try {
+				const { systemEmailAddress } = this.settingsService.getSettings();
 				const info = await this.transporter.sendMail({
+					from: systemEmailAddress,
 					to: to,
 					subject: subject,
 					html: html,
