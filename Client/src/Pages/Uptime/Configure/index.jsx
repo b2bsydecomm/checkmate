@@ -58,6 +58,7 @@ const Configure = () => {
 		"monitor-url": "url",
 		"monitor-name": "name",
 		"monitor-checks-http": "type",
+		"monitor-text-find": "textFind",
 		"monitor-checks-ping": "type",
 		"notify-email-default": "notification-email",
 	};
@@ -364,6 +365,26 @@ const Configure = () => {
 									onChange={handleChange}
 									error={errors["name"] ? true : false}
 									helperText={errors["name"]}
+								/>
+							</Stack>
+						</ConfigBox>
+						{/* a text find option */}
+						<ConfigBox>
+							<Box>
+								<Typography component="h2">Text find</Typography>
+								<Typography component="p">
+									Find a text in the response of the server.
+								</Typography>
+							</Box>
+							<Stack gap={theme.spacing(6)}>
+								<TextInput
+									type="text"
+									id="monitor-text-find"
+									label="Text to find"
+									isOptional={true}
+									placeholder="Hello world"
+									value={monitor?.textFind || ""}
+									onChange={(event) => handleChange(event, "textFind")}
 								/>
 							</Stack>
 						</ConfigBox>

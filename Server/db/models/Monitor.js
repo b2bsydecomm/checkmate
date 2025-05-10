@@ -72,6 +72,9 @@ const MonitorSchema = mongoose.Schema(
 				ref: "Notification",
 			},
 		],
+		textFind: {
+			type: String,
+		},
 		secret: {
 			type: String,
 		},

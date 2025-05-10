@@ -193,6 +193,7 @@ const createMonitorBodyValidation = joi.object({
 		usage_temperature: joi.number(),
 	}),
 	notifications: joi.array().items(joi.object()),
+	textFind: joi.string().allow(""),
 	secret: joi.string(),
 });
 
@@ -201,6 +202,7 @@ const editMonitorBodyValidation = joi.object({
 	description: joi.string(),
 	interval: joi.number(),
 	notifications: joi.array().items(joi.object()),
+	textFind: joi.string().allow(""),
 	secret: joi.string(),
 });
 

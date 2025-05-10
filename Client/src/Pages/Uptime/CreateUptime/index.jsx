@@ -75,6 +75,7 @@ const CreateMonitor = () => {
 		url: "",
 		name: "",
 		type: "http",
+		textFind: "",
 		notifications: [],
 		interval: 1,
 	});
@@ -90,6 +91,7 @@ const CreateMonitor = () => {
 			port: monitor.type === "port" ? monitor.port : undefined,
 			name: monitor.name === "" ? monitor.url : monitor.name,
 			type: monitor.type,
+			textFind: monitor.textFind,
 			interval: monitor.interval * MS_PER_MINUTE,
 		};
 
@@ -361,6 +363,26 @@ const CreateMonitor = () => {
 						) : (
 							""
 						)}
+					</Stack>
+				</ConfigBox>
+				{/* a text find option */}
+				<ConfigBox>
+					<Box>
+						<Typography component="h2">Text find</Typography>
+						<Typography component="p">
+							Find a text in the response of the server.
+						</Typography>
+					</Box>
+					<Stack gap={theme.spacing(6)}>
+						<TextInput
+							type="text"
+							id="monitor-text-find"
+							label="Text to find"
+							isOptional={true}
+							placeholder="Text to find"
+							value={monitor.textFind}
+							onChange={(event) => handleChange(event, "textFind")}
+						/>
 					</Stack>
 				</ConfigBox>
 				<ConfigBox>

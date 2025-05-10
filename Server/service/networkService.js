@@ -144,6 +144,18 @@ class NetworkService {
 				httpResponse.message = this.http.STATUS_CODES[code] || "Network Error";
 				return httpResponse;
 			}
+			if (job.data.textFind) {
+				const textFind = job.data.textFind;
+				const textFindResponse = httpResponse.payload?.includes(textFind);
+				if (!textFindResponse) {
+					console.log(`Text not found: ${textFind}`);
+					httpResponse.status = false;
+					httpResponse.message = "Text not found";
+					return httpResponse;
+				} else {
+					console.log(`Text found: ${textFind}`);
+				}
+			}
 			httpResponse.status = true;
 			httpResponse.code = response.status;
 			httpResponse.message = this.http.STATUS_CODES[response.status];

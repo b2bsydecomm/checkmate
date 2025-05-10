@@ -147,6 +147,7 @@ const monitorValidation = joi.object({
 	name: joi.string().trim().max(50).allow("").messages({
 		"string.max": "This field should not exceed the 50 characters limit.",
 	}),
+	textFind: joi.string().trim().allow(""),
 	type: joi.string().trim().messages({ "string.empty": "This field is required." }),
 	interval: joi.number().messages({
 		"number.base": "Frequency must be a number.",
