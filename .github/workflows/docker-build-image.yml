@@ -1,0 +1,90 @@
+name: Docker build image
+
+on:
+  push:
+    branches:
+      - "master"
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - "master"
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform"
+        required: true
+        default: "ubuntu-latest"
+        type: choice
+        options:
+          - ubuntu-latest
+          - self-hosted
+
+jobs:
+  build:
+    runs-on: ${{ github.event.inputs.platform || 'ubuntu-latest' }}
+    timeout-minutes: 120
+    concurrency:
+      group: ci-${{ github.event.inputs.platform || 'ubuntu-latest' }}-${{ github.repository }}-${{ github.ref }}
+      cancel-in-progress: ${{ false }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to docker registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.CI_REGISTRY || vars.CI_REGISTRY || 'docker.io' }}
+          username: ${{ secrets.CI_REGISTRY_USER || vars.CI_REGISTRY_USER }}
+          password: ${{ secrets.CI_REGISTRY_PASSWORD || vars.CI_REGISTRY_PASSWORD }}
+
+      - name: Build and push server image
+        uses: docker/build-push-action@v4
+        if: ${{ env.DOCKER_PUSH != 'false' && env.DOCKER_PUSH != '0' }}
+        env:
+          DOCKER_PUSH: ${{ vars.DOCKER_PUSH }}
+        with:
+          context: .
+          file: Docker/prod/server.Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: checkmateuptime/server:latest,checkmateuptime/server:${{ github.ref_name }}
+
+      - name: Build and push client image
+        uses: docker/build-push-action@v4
+        if: ${{ env.DOCKER_PUSH != 'false' && env.DOCKER_PUSH != '0' }}
+        env:
+          DOCKER_PUSH: ${{ vars.DOCKER_PUSH }}
+        with:
+          context: .
+          file: Docker/prod/client.Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: checkmateuptime/client:latest,checkmateuptime/client:${{ github.ref_name }}
+
+  notify:
+    needs: [build]
+    runs-on: [ubuntu-latest]
+    timeout-minutes: 8
+    steps:
+      - name: Escape commit message
+        env:
+          COMMIT_MESSAGE: ${{ toJSON(github.event.head_commit.message || format('{0} by {1}', 'Manually deploy', github.triggering_actor)) }}
+        run: |
+          COMMIT_MESSAGE=$(echo $COMMIT_MESSAGE | sed 's/"/\\"/g')
+          COMMIT_MESSAGE=$(echo $COMMIT_MESSAGE | sed 's/\.*\\n/. /g')
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+
+          echo "BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+      - name: Call webhook
+        uses: fjogeleit/http-request-action@v1
+        if: ${{ env.WEBHOOK_URL != '' }}
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL || vars.WEBHOOK_URL }}
+        with:
+          url: ${{ env.WEBHOOK_URL }}
+          method: 'POST'
+          data: '{"branch": "${{ env.BRANCH }}", "repository": "${{ github.repository }}", "actor": "${{ github.actor }}", "message": "${{ env.COMMIT_MESSAGE }}"}'
+          escapeData: true
+          preventFailureOnNoResponse: true
+          ignoreSsl: true
