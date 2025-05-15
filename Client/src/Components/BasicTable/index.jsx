@@ -293,7 +293,7 @@ const BasicTable = ({ data, paginated, reversed, table, emptyMessage = "No data"
 						page={page}
 						onPageChange={handleChangePage}
 						rowsPerPage={rowsPerPage}
-						rowsPerPageOptions={[5, 10, 15, 25]}
+						rowsPerPageOptions={[5, 10, 15, 25, 50, 100, 200]}
 						onRowsPerPageChange={handleChangeRowsPerPage}
 						ActionsComponent={TablePaginationActions}
 						labelRowsPerPage="Rows per page"

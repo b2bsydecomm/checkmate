@@ -12,7 +12,7 @@ Pagination.propTypes = {
 	handleChangeRowsPerPage: PropTypes.func, // Function to handle changes in rows per page.
 };
 
-const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 25];
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 25, 50, 100, 200];
 
 /**
  * Pagination component for table navigation with customized styling and behavior.
