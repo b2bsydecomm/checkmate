@@ -186,13 +186,14 @@ class NetworkService {
 			}
 
 			// validate if response data match expected value
-			let result = response?.data;
+			let result = response?.data || '';
 
 			this.logger.info({
 				service: this.SERVICE_NAME,
 				method: "requestHttp",
 				message: `Job: [${name}](${_id}) match result with expected value`,
-				details: { expectedValue, result, jsonPath, matchMethod },
+				// truncate result to 100 characters
+				details: { expectedValue, result: result.length > 100 ? `${result.substring(0, 100)}...` : result, jsonPath, matchMethod },
 			});
 
 			if (jsonPath) {

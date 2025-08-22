@@ -5,6 +5,7 @@ class NotificationService {
 
 	constructor({
 		emailService,
+		smsService,
 		db,
 		logger,
 		networkService,
@@ -12,6 +13,7 @@ class NotificationService {
 		notificationUtils,
 	}) {
 		this.emailService = emailService;
+		this.smsService = smsService;
 		this.db = db;
 		this.logger = logger;
 		this.networkService = networkService;
@@ -24,6 +26,12 @@ class NotificationService {
 
 		if (type === "email") {
 			const messageId = await this.emailService.sendEmail(address, subject, html);
+			if (!messageId) return false;
+			return true;
+		}
+
+		if (type === "sms") {
+			const messageId = await this.smsService.sendSms(address, content);
 			if (!messageId) return false;
 			return true;
 		}

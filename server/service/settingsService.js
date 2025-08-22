@@ -7,6 +7,7 @@ const envConfig = {
 	systemEmailUser: process.env.SYSTEM_EMAIL_USER,
 	systemEmailAddress: process.env.SYSTEM_EMAIL_ADDRESS,
 	systemEmailPassword: process.env.SYSTEM_EMAIL_PASSWORD,
+	systemEmailSecure: process.env.SYSTEM_EMAIL_SECURE === "true",
 	jwtSecret: process.env.JWT_SECRET,
 	jwtTTL: process.env.TOKEN_TTL,
 	clientHost: process.env.CLIENT_HOST,
@@ -16,6 +17,9 @@ const envConfig = {
 	port: process.env.PORT,
 	pagespeedApiKey: process.env.PAGESPEED_API_KEY,
 	uprockApiKey: process.env.UPROCK_API_KEY,
+	twilioAccountSid: process.env.TWILIO_ACCOUNT_SID,
+	twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
+	twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER,
 };
 /**
  * SettingsService

@@ -54,6 +54,8 @@ const CreateMonitor = () => {
 		{ _id: 3, name: "3 minutes" },
 		{ _id: 4, name: "4 minutes" },
 		{ _id: 5, name: "5 minutes" },
+		{ _id: 15, name: "15 minutes" },
+		{ _id: 30, name: "30 minutes" },
 	];
 
 	const matchMethodOptions = [

@@ -62,6 +62,7 @@ import Docker from "dockerode";
 import net from "net";
 // Email service and dependencies
 import EmailService from "./service/emailService.js";
+import SmsService from "./service/smsService.js";
 import nodemailer from "nodemailer";
 import pkg from "handlebars";
 const { compile } = pkg;
@@ -166,6 +167,7 @@ const startApp = async () => {
 		stringService,
 		settingsService
 	);
+	const smsService = new SmsService(settingsService, logger);
 	const emailService = new EmailService(
 		settingsService,
 		fs,
@@ -184,6 +186,7 @@ const startApp = async () => {
 
 	const notificationService = new NotificationService({
 		emailService,
+		smsService,
 		db,
 		logger,
 		networkService,
@@ -230,6 +233,7 @@ const startApp = async () => {
 	ServiceRegistry.register(MongoDB.SERVICE_NAME, db);
 	ServiceRegistry.register(SettingsService.SERVICE_NAME, settingsService);
 	ServiceRegistry.register(EmailService.SERVICE_NAME, emailService);
+	ServiceRegistry.register(SmsService.SERVICE_NAME, smsService);
 	ServiceRegistry.register(NetworkService.SERVICE_NAME, networkService);
 	ServiceRegistry.register(BufferService.SERVICE_NAME, bufferService);
 	ServiceRegistry.register(StatusService.SERVICE_NAME, statusService);

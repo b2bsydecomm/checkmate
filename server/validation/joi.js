@@ -587,12 +587,12 @@ const createNotificationBodyValidation = joi.object({
 	}),
 	type: joi
 		.string()
-		.valid("email", "webhook", "slack", "discord", "pager_duty")
+		.valid("email", "webhook", "slack", "discord", "pager_duty", "sms")
 		.required()
 		.messages({
 			"string.empty": "Notification type is required",
 			"any.required": "Notification type is required",
-			"any.only": "Notification type must be email, webhook, or pager_duty",
+			"any.only": "Notification type must be email, sms, webhook, or pager_duty",
 		}),
 });
 
