@@ -147,6 +147,11 @@ class NetworkService {
 			} = monitor;
 			const config = {};
 
+			const timeout = parseInt(process.env.HTTP_TIMEOUT || 0);
+			if (timeout > 0) {
+				config.timeout = timeout;
+			}
+
 			secret !== undefined && (config.headers = { Authorization: `Bearer ${secret}` });
 
 			if (ignoreTlsErrors === true) {
