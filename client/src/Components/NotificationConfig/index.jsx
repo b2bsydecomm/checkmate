@@ -16,6 +16,7 @@ const NotificationConfig = ({ notifications, setMonitor, setNotifications }) => 
 	const [selectedNotifications, setSelectedNotifications] = useState([]);
 
 	const handleSearch = (value) => {
+		console.log("NotificationConfig->handleSearch", value);
 		setSelectedNotifications(value);
 		setMonitor((prev) => {
 			return {
@@ -48,6 +49,7 @@ const NotificationConfig = ({ notifications, setMonitor, setNotifications }) => 
 			const toSet = setNotifications.map((notification) => {
 				return notifications.find((n) => n._id === notification);
 			});
+			console.log("NotificationConfig->useEffect", {setNotifications, notifications, toSet});
 			setSelectedNotifications(toSet);
 		}
 	}, [setNotifications, notifications]);
@@ -75,17 +77,17 @@ const NotificationConfig = ({ notifications, setMonitor, setNotifications }) => 
 					<Stack
 						direction="row"
 						alignItems="center"
-						key={notification._id}
+						key={notification?._id}
 						width="100%"
 					>
 						<Typography
 							flexGrow={1} // <-- This will take up all available horizontal space
 						>
-							{notification.notificationName}
+							{notification?.notificationName || "N/A"}
 						</Typography>
 						<DeleteOutlineRoundedIcon
 							onClick={() => {
-								handleDelete(notification._id);
+								handleDelete(notification?._id);
 							}}
 							sx={{ cursor: "pointer" }}
 						/>

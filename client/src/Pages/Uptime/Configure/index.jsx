@@ -18,7 +18,7 @@ import Checkbox from "../../../Components/Inputs/Checkbox";
 // Utils
 import { useParams } from "react-router";
 import { useTheme } from "@emotion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { monitorValidation } from "../../../Validation/validation";
 import { createToast } from "../../../Utils/toastUtils";
 import { useTranslation } from "react-i18next";
@@ -111,6 +111,10 @@ const Configure = () => {
 		equal: "success",
 		include: "ok",
 	};
+
+	useEffect(() => {
+		setUseAdvancedMatching(form.expectedValue || form.jsonPath ? true : false);
+	}, [form.expectedValue, form.jsonPath]);
 
 	// Handlers
 	const handlePause = async () => {

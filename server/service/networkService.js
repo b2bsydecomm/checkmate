@@ -145,7 +145,11 @@ class NetworkService {
 				matchMethod,
 				expectedValue,
 			} = monitor;
-			const config = {};
+			const config = {
+				headers: {
+					"User-Agent": process.env.USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+				},
+			};
 
 			const timeout = parseInt(process.env.HTTP_TIMEOUT || 0);
 			if (timeout > 0) {
