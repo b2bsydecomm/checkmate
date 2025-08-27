@@ -1,0 +1,82 @@
+
+name: checkmate-2.3-prod
+
+services:
+  client:
+    image: checkuptime/uptime_client:latest
+    build:
+      context: .
+      dockerfile: docker/dist/client.Dockerfile
+    restart: always
+    environment:
+      UPTIME_APP_API_BASE_URL: "/api/v1"
+    ports:
+      - "5173:80"
+    volumes:
+    #   - ./client/dist:/usr/share/nginx/html
+      - ./docker/dist/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      server:
+        condition: service_healthy
+  server:
+    image: checkuptime/uptime_server:latest
+    build:
+      context: .
+      dockerfile: docker/dist/server.Dockerfile
+    restart: always
+    ports:
+      - "52345:52345"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+    # volumes:
+    #   - ./server:/app
+    # - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'wget --spider -q http://localhost:52345/api-docs/ || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  redis:
+    image: redis:7.4.1-alpine
+    # image: checkuptime/uptime_redis:2.1
+    # build:
+    #   context: .
+    #   dockerfile: docker/dist/redis.Dockerfile
+    restart: always
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+  mongodb:
+    image: mongo:8.0.9
+    # image: checkuptime/uptime_database_mongo:2.1
+    # build:
+    #   context: .
+    #   dockerfile: docker/dist/mongoDB.Dockerfile
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    command: ["mongod", "--quiet", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+
+volumes:
+  redis_data:
+  mongo_data:
+
